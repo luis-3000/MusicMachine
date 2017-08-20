@@ -20,7 +20,7 @@ public class BeatBox {
 	String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acustic Snare",
 								"Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", 
 								"Maracas", "Whistle", "Low Conga", "Cowbell", "Vibraslap",
-							    "Low-mid Tom", "High Agogo", "open Hi Conga"};
+							    "Low-mid Tom", "High Agogo", "Open Hi Conga"};
 	
 	// These represent the actual drum keys.
 	// The drum channel is like a piano, except each 'key' on the piano is a different drum.
@@ -195,6 +195,28 @@ public class BeatBox {
 			event = new MidiEvent(a, tick);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/* Code to Serialize a pattern */
+	public class  MySendListener implements ActionListener {
+		public void actionPerformed(ActionEvent a) {
+			boolean[] checkboxState = new boolean[256]; //state of each checkbox
+
+			for(int i = 0; i < 256; i++) {
+				JCheckBox check = (JCheckBox) checkboxList.get(i);
+				if(check.isSelected()) {
+					checkboxState[i] = true;
+				}
+			}
+
+			try {
+				FileOutputStream fileStream = new FileOutputStream(new File("Checkbox.ser"));
+				ObjectOutputStrem os = ObjectOutputStrem(fileStream);
+				os.writeObject(checkboxState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
