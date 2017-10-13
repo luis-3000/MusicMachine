@@ -12,16 +12,22 @@ public class SimpleChatClient {
 	PrintWriter writer;
 	Socket sock;
 
+
+	public static void main(String[] args) {
+		SimpleChatClient client = new SimpleChatClient();
+		client.go();
+	}
+
 	public void go() {
 		// Make the GUI and register a listerner with the send button
 		JFrame frame = new JFrame("Ludicrously Simple Chat Client");
 		JPanel mainPanel = new JPanel();
 		incoming.setLineWrap(true);
-		incoming.setWratStyleWord(true);
+		incoming.setWrapStyleWord(true);
 		incoming.setEditable(false);
-		JScrollPane qScroller - new JScrollPane(incoming);
+		JScrollPane qScroller = new JScrollPane(incoming);
 		qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		qScroller.setHorizaontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		outgoing = new JTextField(20);
 		JButton sendButton = new JButton("Send");
 		sendButton.addActionListener(new SendButtonListener()); // build the GUI
@@ -48,7 +54,7 @@ public class SimpleChatClient {
 			// Make a Socket, then make a PrintWriter
 			sock = new Socket("127.0.0.1", 5000); // Using local host to test the client and the server on the same machine
 												 // It's called from the go() method right before displaying the app GUI
-			InputStreamReader streamReader = new InputStreamReader(sock.getInputStreadm());
+			InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 			reader = new BufferedReader(streamReader);
 			// Assign the PrintWriter to writer insstance variable	
 			writer = new PrintWriter(sock.getOutputStream());
@@ -58,7 +64,7 @@ public class SimpleChatClient {
 		}
 	}
 
-	public class SendButtonListener implements ActionsListener {
+	public class SendButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent ev) {
 			try  { 
@@ -93,9 +99,5 @@ public class SimpleChatClient {
 		}
 	}
 
-	public static void main(String[] args) {
-		SimpleChatClient clien  = new SimpleChatClient();
-		client.go();
-	}
 
 } // close outer class
