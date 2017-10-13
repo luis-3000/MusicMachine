@@ -18,10 +18,12 @@ public class BeatBox {
 	JList incomingList;
 	JTextField userMessage;
 	ArrayList<JCheckBox> checkboxList; // Store the features checkboxes in an ArrayList
+	int nextNum;
+	Vector<String> listVector = new Vector<String>();
 	String userName;
-	ObjectOutputStrem out;
+	ObjectOutputStream out;
 	ObjectInputStream in;
-	HashMapr<String, boolean[]> otherSeqsMap = new HashMap<String, boolean[]>();
+	HashMap<String, boolean[]> otherSeqsMap = new HashMap<String, boolean[]>();
 
 	Sequencer sequencer;
 	Sequence sequence;
@@ -36,7 +38,7 @@ public class BeatBox {
 	// These represent the actual drum keys.
 	// The drum channel is like a piano, except each 'key' on the piano is a different drum.
 	// So, the number '35' is the key for the Bass drum, 42 is Closed Hi-Hat, etc.						    
-	int[] instruments = (35,42,46,38,49,39,50,50,70,72,64,56,58,47,67,63);							    	
+	int[] instruments = {35,42,46,38,49,39,50,50,70,72,64,56,58,47,67,63};							    	
 
 	public static void main(String[] args) {
 		new BeatBox().startUp(args[0]); // args[0] is the user ID/screen name
@@ -47,12 +49,12 @@ public class BeatBox {
 		// Open connection to the server
 		try {
 			Socket sock = new Socket("127.0.0.1", 4242);
-			out = new ObjectOutputStrem(sock.getOutputStream());
+			out = new ObjectOutputStream(sock.getOutputStream());
 			in = new ObjectInputStream(sock.getInputStream());
 			Thread remote = new Thread(new RemoteReader());
 			remote.start();
 		} catch (Exception ex)  { 
-			System.out.println("couldn't connect - you'll have to play alone.")
+			System.out.println("couldn't connect - you'll have to play alone.");
 		}
 		setUpMidi();
 		buildGUI();
@@ -136,8 +138,8 @@ public class BeatBox {
 			sequencer = MidiSystem.getSequencer();
 			sequencer.open();
 			sequence = new Sequence(Sequence.PPQ,4);
-			track.sequence.crateTrack();
-			sequencer.setTemptoInBPM(120);
+			track = sequence.createTrack();
+			sequencer.setTempoInBPM(120);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 
@@ -228,7 +230,7 @@ public class BeatBox {
 
 			// Here, we serialize two objects, the String message and the beat pattern, and write those two
 			// objects to the socket output stream (to the server)
-			Strring messageToSend = null;
+			String messageToSend = null;
 			try {out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
 				out.writeObject(checkboxState);
 			} catch (Exception ex) {
@@ -307,7 +309,7 @@ public class BeatBox {
 	   for the Bass drum, and each index in the array will hold either the key of that instrument,
 	   or a zero. If it's a zero, the instrument isn't supposed to play at that beat. Otherwise,
 	   I make an event and add it to the track. */
-	public void makeTracks(int[] list) {
+	public void makeTracks(ArrayList list) {
 		Iterator it = list.iterator();
 		for(int i = 0; i < 16; i++) {
 			Integer num = (Integer) it.next();
