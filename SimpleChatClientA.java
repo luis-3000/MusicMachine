@@ -6,7 +6,9 @@ import java.awt.event.*;
 
 public class SimpleChatClientA {
 	
+	JTextArea incoming;
 	JTextField outgoing;
+	BufferedReader reader;
 	PrintWriter writer;
 	Socket sock;
 
@@ -14,6 +16,7 @@ public class SimpleChatClientA {
 		// Make the GUI and register a listerner with the send button
 		JFrame frame = new JFrame("Ludicrously Simple Chat Client");
 		JPanel mainPanel = new JPanel();
+		incoming
 		JButton sendButton = new JButton("Send Message");
 		sendButton.addActionListener(new SendButtonListener()); // build the GUI
 		mainPanel.add(outgoing);
